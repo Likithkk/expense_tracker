@@ -1,27 +1,26 @@
-const express = require('express');
-const { mongoose } = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const router = require('./routes/routes');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const mongoose= require("mongoose");
+const expenseRoute=require("./routes/expense")
 
-const app = express();
-dotenv.config();
+dotenv.config()
+const app=express();
 
-//MIDDLEWARE
 app.use(cors());
+app.use(express.json());
+app.use("/api/v1/expenses",expenseRoute)
 
-//MONGO CONNECT
-mongoose.connect(process.env.MONGO_URL)
-.then(()=>{ 
-    console.log("Connection to DB is succcessful")   
+// DB CONNECTION
+
+mongoose.connect(process.env.MONGO_URL).then(() =>{
+    console.log("DB connection is successfull")
+}).catch((e) =>{
+    console.log(e)
 })
-.catch(()=>{    
-    console.log(err)    
-});
 
-
-app.use('/api',router)
-
-app.listen(process.env.PORT,()=>{
-    console.log(`Connected at port ${process.env.PORT}`)
-});
+// start server
+const PORT=process.env.PORT;
+app.listen(PORT, () =>{
+    console.log(`Server is running on port ${PORT}`)
+})
